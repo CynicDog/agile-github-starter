@@ -28,7 +28,9 @@ jobs:
                 4. deploy for production
                 
                 Each comment will trigger a corresponding GitHub Actions workflow. 
-            
-                All steps must be completed before merging! 
+          
+                ✅ All steps must be completed **before merging** into main.
+  
+                Good luck!   
                 `
             });
