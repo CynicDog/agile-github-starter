@@ -1,0 +1,14 @@
+name: Build and Deploy to Dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: echo "Simulating build step..."
+
+      - name: Deploy
+        run: echo "Simulating deploy step..."

@@ -1,0 +1,11 @@
+name: Deploy to Staging
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Simulating staging deployment..."

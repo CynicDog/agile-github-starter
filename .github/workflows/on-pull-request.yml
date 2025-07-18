@@ -1,0 +1,51 @@
+name: Test and Post CI/CD Instructions on PR
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      tests_passed: ${{ steps.run-tests.outcome == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci
+      - id: run-tests
+        name: Run tests
+        run: npm test
+
+  comment-guide:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    needs: test
+    steps:
+      - name: Post CI/CD trigger guide
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `
+                👋 To complete the CI/CD pipeline, please comment the following commands in sequence:
+
+                1. \"merge & build and deploy for development\"
+                2. \"merge & build for staging\"
+                3. \"merge & deploy for staging\"
+                4. \"merge & deploy for production\"
+
+                Each comment will trigger a corresponding GitHub Actions workflow. 
+                
+                All steps must be completed before merging! 
+                `
+            });
