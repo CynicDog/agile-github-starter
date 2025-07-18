@@ -3,9 +3,6 @@
 A customizable GitHub template repository for Agile-driven CI/CD automation and streamlined developer workflows.  
 Designed to integrate testing, environment-specific deployments, and team collaboration via **Pull Request comments**.
 
-## GitHub Flow Chart 
-<img width="2179" height="1404" alt="image" src="https://github.com/user-attachments/assets/5e3ad8b3-bf30-4424-9834-8a7a464e0797" />
-
 ## 🚀 Key Features
 
 - **Environment-Specific CI/CD Pipelines**  
@@ -19,9 +16,6 @@ Designed to integrate testing, environment-specific deployments, and team collab
 
 - **Progressive Promotion Model**  
   Code is promoted through `development → stage → main` via defined steps.
-
-- **Hotfix Automation**  
-  Automatically triggers production deployment and closes linked issues when hotfix branches (`hotfix/issue-*`) are deleted, streamlining urgent fixes and cleanup.
 
 ## 🧰 CI/CD Workflow Summary
 
@@ -47,12 +41,6 @@ Each stage of the pipeline is triggered by **PR comments** in the following sequ
 - No merge occurs — assumes PR is targeting `main`
 - Workflow: `deploy-prod.yml`
 
-### 5. Hotfix Branch Deletion Trigger (Automated)
-- On deletion of any `hotfix/issue-*` branch:
-  - Automatically triggers production deployment (`deploy-prod.yml`)
-  - Closes the corresponding GitHub issue linked to the hotfix branch
-- Workflow: `.github/workflows/hotfix-deploy-on-delete.yml` (example filename)
-
 > ⚠️ Always wait for each workflow to complete before triggering the next.
 
 ## 🔄 Pull Request Flow Example
@@ -71,20 +59,19 @@ Each stage of the pipeline is triggered by **PR comments** in the following sequ
 
 ## 📂 Workflow Files
 
-| Workflow Name              | File Name                                      | Trigger Source           |
-| -------------------------- | ---------------------------------------------- | ------------------------ |
-| Test & Comment Guide       | `.github/workflows/test.yml`                   | `pull_request: opened`   |
-| PR Comment Handler         | `.github/workflows/handle-comment.yml`         | `issue_comment: created` |
-| Dev CI/CD                  | `.github/workflows/build-and-deploy-dev.yml`  | PR Comment               |
-| Staging Build              | `.github/workflows/build-stage.yml`            | PR Comment               |
-| Staging Deploy             | `.github/workflows/deploy-stage.yml`           | PR Comment               |
-| Production Deploy          | `.github/workflows/deploy-prod.yml`            | PR Comment               |
-| Hotfix Deploy & Issue Close| `.github/workflows/hotfix-deploy-on-delete.yml`| `delete` event on `hotfix/issue-*` branches |
+| Workflow Name        | File Name                                    | Trigger Source           |
+| -------------------- | -------------------------------------------- | ------------------------ |
+| Test & Comment Guide | `.github/workflows/test.yml`                 | `pull_request: opened`   |
+| PR Comment Handler   | `.github/workflows/handle-comment.yml`       | `issue_comment: created` |
+| Dev CI/CD            | `.github/workflows/build-and-deploy-dev.yml` | PR Comment               |
+| Staging Build        | `.github/workflows/build-stage.yml`          | PR Comment               |
+| Staging Deploy       | `.github/workflows/deploy-stage.yml`         | PR Comment               |
+| Production Deploy    | `.github/workflows/deploy-prod.yml`          | PR Comment               |
 
 ## 📌 Requirements
 
 * Node.js 20+
-* GitHub Actions enabled on your repository
+* GitHub Actions enabled on your repo
 * Protected branches: `main`, `stage`, `development` recommended
 
 ## 🙋‍♀️ Why Use This?
@@ -93,7 +80,6 @@ Each stage of the pipeline is triggered by **PR comments** in the following sequ
 * ✅ Keeps CI/CD steps visible and auditable
 * ✅ Enables non-admins to trigger deployments safely
 * ✅ Aligns development flow with Agile iteration cycles
-* ✅ Automates hotfix deployment and issue management for faster fixes
 
 ## 🧭 Future Improvements
 
