@@ -1,22 +1,34 @@
-- name: Post CI/CD trigger guide
-  uses: actions/github-script@v6
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    script: |
-      await github.rest.issues.createComment({
-        issue_number: context.payload.pull_request.number,
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        body: `👋 To complete the CI/CD pipeline, please comment the following commands in sequence:
+name: Post CI/CD Instructions on PR
 
-          1. merge & build and deploy for development
-          2. merge & build for staging
-          3. deploy for staging
-          4. deploy for production
+on:
+  pull_request:
+    branches: [main]
+    types: [opened]
 
-          Each comment will trigger a corresponding GitHub Actions workflow.
+jobs:
+  comment-guide:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Post CI/CD trigger guide
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `👋 To complete the CI/CD pipeline, please comment the following commands in sequence:
 
-          ✅ All steps must be completed **before merging** into main.
-
-          Good luck!`
-      });
+                1. merge & build and deploy for development
+                2. merge & build for staging
+                3. deploy for staging
+                4. deploy for production
+            
+                Each comment will trigger a corresponding GitHub Actions workflow. 
+            
+                ✅ All steps must be completed **before merging** into main.
+            
+                Good luck!`
+            });
