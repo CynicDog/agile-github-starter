@@ -22,11 +22,11 @@ jobs:
               body: `
                 👋 To complete the CI/CD pipeline, please comment the following commands in sequence:
 
-                1. \`merge & build and deploy for development\`
-                2. \`merge & build for staging\`
-                3. \`merge & deploy for staging\`
-                4. \`merge & deploy for production\`
-
+                1. merge & build and deploy for development
+                2. merge & build for staging
+                3. deploy for staging
+                4. deploy for production
+                
                 Each comment will trigger a corresponding GitHub Actions workflow. 
             
                 All steps must be completed before merging! 

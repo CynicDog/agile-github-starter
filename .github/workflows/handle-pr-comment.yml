@@ -17,22 +17,27 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const comment = context.payload.comment.body.trim().toLowerCase();
+
             const commands = {
               "merge & build and deploy for development": {
                 base: "development",
-                workflow: "build-and-deploy-dev.yml"
+                workflow: "build-and-deploy-dev.yml",
+                merge: true
               },
               "merge & build for staging": {
                 base: "stage",
-                workflow: "build-stage.yml"
+                workflow: "build-stage.yml",
+                merge: true
               },
-              "merge & deploy for staging": {
+              "deploy for staging": {
                 base: "stage",
-                workflow: "deploy-stage.yml"
+                workflow: "deploy-stage.yml",
+                merge: false
               },
-              "merge & deploy for production": {
+              "deploy for production": {
                 base: "main",
-                workflow: "deploy-prod.yml"
+                workflow: "deploy-prod.yml",
+                merge: false
               }
             };
 
@@ -43,7 +48,6 @@ jobs:
             }
 
             const { repo, owner } = context.repo;
-            const pr = context.payload.issue.pull_request;
             const prNumber = context.payload.issue.number;
 
             const { data: prData } = await github.rest.pulls.get({
@@ -55,35 +59,34 @@ jobs:
             const sourceBranch = prData.head.ref;
             const targetBranch = config.base;
 
-            // Create a new PR from feature branch to target
-            const title = `Auto-merge ${sourceBranch} -> ${targetBranch}`;
-            const branchRef = `${sourceBranch}-to-${targetBranch}`;
+            if (config.merge) {
+              const title = `Auto-merge ${sourceBranch} -> ${targetBranch}`;
+              try {
+                const { data: newPR } = await github.rest.pulls.create({
+                  owner,
+                  repo,
+                  title,
+                  head: sourceBranch,
+                  base: targetBranch,
+                  body: `Automated merge for ${comment}`
+                });
 
-            try {
-              const { data: newPR } = await github.rest.pulls.create({
-                owner,
-                repo,
-                title,
-                head: sourceBranch,
-                base: targetBranch,
-                body: `Automated merge for ${comment}`
-              });
+                await github.rest.pulls.merge({
+                  owner,
+                  repo,
+                  pull_number: newPR.number,
+                  merge_method: "squash"
+                });
 
-              // Merge it
-              await github.rest.pulls.merge({
-                owner,
-                repo,
-                pull_number: newPR.number,
-                merge_method: "squash"
-              });
-
-              console.log(`Merged ${sourceBranch} into ${targetBranch}`);
-            } catch (err) {
-              console.log("PR may already exist or merge failed:", err.message);
-              return;
+                console.log(`Merged ${sourceBranch} into ${targetBranch}`);
+              } catch (err) {
+                console.log("PR may already exist or merge failed:", err.message);
+                // Optionally you can exit here by uncommenting the next line:
+                // return;
+              }
             }
 
-            // Trigger corresponding workflow on base branch
+            // Trigger the workflow regardless of merge success or if no merge required
             await github.rest.actions.createWorkflowDispatch({
               owner,
               repo,
