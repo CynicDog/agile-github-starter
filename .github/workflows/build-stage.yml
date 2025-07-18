@@ -1,0 +1,10 @@
+name: Build for Staging
+
+on: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: echo "Simulating build for staging..."

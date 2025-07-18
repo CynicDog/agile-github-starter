@@ -1,0 +1,10 @@
+name: Deploy to Production
+
+on: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Simulating production deployment..."

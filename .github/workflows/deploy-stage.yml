@@ -1,0 +1,10 @@
+name: Deploy to Staging
+
+on: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Simulating staging deployment..."
