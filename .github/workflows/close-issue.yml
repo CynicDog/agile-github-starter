@@ -1,0 +1,37 @@
+name: Close Issue on Branch Deletion
+
+on:
+  delete:
+    branches:
+      - 'feature/issue-*'
+
+jobs:
+  close-linked-issue:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.ref, 'feature/issue-')
+
+    permissions: write-all
+    steps:
+      - name: Extract issue number and close it
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branch = context.payload.ref; // e.g., 'feature/issue-11'
+            const match = branch.match(/^feature\/issue-(\d+)$/);
+
+            if (!match) {
+              console.log("Branch name doesn't match pattern. Skipping.");
+              return;
+            }
+
+            const issueNumber = parseInt(match[1], 10);
+
+            console.log(`Closing issue #${issueNumber} linked to deleted branch '${branch}'`);
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              state: "closed"
+            });
