@@ -3,25 +3,24 @@ name: Test and Post CI/CD Instructions on PR
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize]
+    types: [opened]
+
+permissions:
+  issues: write
 
 jobs:
   test:
     runs-on: ubuntu-latest
     outputs:
       tests_passed: ${{ steps.run-tests.outcome == 'success' }}
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
       - name: Install dependencies
         run: npm ci
-
       - id: run-tests
         name: Run tests
         run: npm test
@@ -30,6 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+    needs: test
     steps:
       - name: Post CI/CD trigger guide
         uses: actions/github-script@v6
