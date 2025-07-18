@@ -20,10 +20,10 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `👋 To complete the CI/CD pipeline, please comment the following commands in sequence:
-            1. merge & build and deploy for development
-            2. merge & build for staging
-            3. deploy for staging
-            4. deploy for production
+            * [ ] merge & build and deploy for development
+            * [ ] merge & build for staging
+            * [ ] deploy for staging
+            * [ ] deploy for production
             
             Each comment will trigger a corresponding GitHub Actions workflow. 
             
