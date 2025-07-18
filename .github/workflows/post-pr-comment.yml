@@ -26,7 +26,7 @@ jobs:
                 2. merge & build for staging
                 3. deploy for staging
                 4. deploy for production
-
+                
                 Each comment will trigger a corresponding GitHub Actions workflow. 
             
                 All steps must be completed before merging! 
