@@ -8,9 +8,7 @@ jobs:
   handle-command:
     if: github.event.issue.pull_request
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
+    permissions: write-all
 
     steps:
       - name: Trigger based on comment
