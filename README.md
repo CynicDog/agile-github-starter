@@ -3,6 +3,9 @@
 A customizable GitHub template repository for Agile-driven CI/CD automation and streamlined developer workflows.  
 Designed to integrate testing, environment-specific deployments, and team collaboration via **Pull Request comments**.
 
+## GitHub Flow Chart 
+<img width="2179" height="1404" alt="image" src="https://github.com/user-attachments/assets/5e3ad8b3-bf30-4424-9834-8a7a464e0797" />
+
 ## 🚀 Key Features
 
 - **Environment-Specific CI/CD Pipelines**  
