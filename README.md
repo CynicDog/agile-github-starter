@@ -71,12 +71,12 @@ Each stage of the pipeline is triggered by **PR comments** in the following sequ
 ## 📌 Requirements
 
 * Node.js 20+
-* GitHub Actions enabled on your repo
+* GitHub Actions enabled on your repository
 * Protected branches: `main`, `stage`, `development` recommended
 
 ## 🙋‍♀️ Why Use This?
 
-* ✅ Simplifies multi-env deployment
+* ✅ Simplifies multi-env deployment 
 * ✅ Keeps CI/CD steps visible and auditable
 * ✅ Enables non-admins to trigger deployments safely
 * ✅ Aligns development flow with Agile iteration cycles
