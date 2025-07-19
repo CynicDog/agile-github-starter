@@ -1,0 +1,29 @@
+name: Deploy on Hotfix Branch Deletion
+
+on:
+  delete:
+    branches:
+      - hotfix/issue-*
+
+jobs:
+  deploy-prod-on-hotfix:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.ref, 'hotfix/issue-')
+
+    permissions: write-all
+    steps:
+      - name: Trigger production deployment workflow
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+
+            await github.rest.actions.createWorkflowDispatch({
+              owner,
+              repo,
+              workflow_id: "deploy-prod.yml",
+              ref: "main" // production branch
+            });
+
+            console.log("🚀 Triggered production deployment due to hotfix branch deletion.");
