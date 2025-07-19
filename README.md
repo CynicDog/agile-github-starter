@@ -1,6 +1,7 @@
 # agile-github-starter
 
-A customizable GitHub template repository for Agile-driven CI/CD automation and streamlined developer workflows.  
+A GitHub template for Agile teams, automating CI/CD pipelines and simplifying multi-environment deployments through PR-driven workflows.
+
 Designed to integrate testing, environment-specific deployments, and team collaboration via **Pull Request comments**.
 
 ## 🚀 Key Features
