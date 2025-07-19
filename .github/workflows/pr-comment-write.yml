@@ -30,14 +30,14 @@ jobs:
             
             ✅ All steps must be completed **before merging** into main.
             
-            Good luck! 🚀
+            Good luck!
             `;
             
-            const hotfixBody = `🚑 This is a **hotfix** branch PR — fast-tracking to production!
+            const hotfixBody = `👋 This is a **hotfix** branch PR — fast-tracking to production!
             
-            Closing this pull request after a successful merge will trigger the production deployment workflow.
+            ✅ Closing this pull request after a successful merge will trigger the production deployment workflow.
             
-            Thanks for patching things up! 🔧
+            Thanks for patching things up!
             `;
             
             const commentBody = isHotfix ? hotfixBody : standardBody;

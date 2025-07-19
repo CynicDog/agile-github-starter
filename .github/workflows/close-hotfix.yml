@@ -18,9 +18,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
-            const branch = github.event.ref; // e.g. "refs/heads/hotfix/issue-123"
-            // Extract branch name only (remove "refs/heads/")
-            const branchName = branch.replace('refs/heads/', '');
+            const branch = context.payload.ref; // e.g. "hotfix/issue-123"
 
             // Trigger deploy-prod.yml workflow on main branch
             await github.rest.actions.createWorkflowDispatch({
@@ -32,12 +30,11 @@ jobs:
 
             console.log("🚀 Triggered production deployment due to hotfix branch deletion.");
 
-            // Extract issue number from branch name (e.g. "hotfix/issue-123")
-            const issueMatch = branchName.match(/hotfix\/issue-(\d+)/);
+            const issueMatch = branch.match(/^hotfix\/issue-(\d+)$/);
             if (issueMatch) {
               const issueNumber = parseInt(issueMatch[1], 10);
 
-              console.log(`Closing issue #${issueNumber} linked to deleted branch '${branchName}'`);
+              console.log(`Closing issue #${issueNumber} linked to deleted branch '${branch}'`);
 
               await github.rest.issues.update({
                 owner,
@@ -46,5 +43,6 @@ jobs:
                 state: "closed"
               });
             } else {
-              console.log(`No issue number found in branch name '${branchName}', skipping issue closure.`);
+              console.log(`No issue number found in branch name '${branch}', skipping issue closure.`);
             }
+
