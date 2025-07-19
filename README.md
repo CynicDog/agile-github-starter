@@ -69,6 +69,7 @@ Each stage of the pipeline is triggered by **PR comments** in the following sequ
 | Production Deploy    | `.github/workflows/deploy-prod.yml`          | PR Comment               |
 
 ## 📌 Requirements
+
 * Node.js 20+
 * GitHub Actions enabled on your repo
 * Protected branches: `main`, `stage`, `development` recommended
