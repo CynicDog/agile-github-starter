@@ -1,4 +1,4 @@
-name: Create Feature Branch on Issue Opened
+name: Create Hotfix or Feature Branch on Issue Opened
 
 on:
   issues:
@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  create-feature-branch:
+  create-branch:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -16,12 +16,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create feature branch from main
+      - name: Create branch from main based on label
         uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueNumber = context.payload.issue.number;
-            const branchName = `feature/issue-${issueNumber}`;
+            const issue = context.payload.issue;
+            const labels = issue.labels.map(label => label.name.toLowerCase());
+            const isHotfix = labels.includes('hotfix');
+
+            const branchType = isHotfix ? 'hotfix' : 'feature';
+            const issueNumber = issue.number;
+            const branchName = `${branchType}/issue-${issueNumber}`;
+
+            console.log(`Creating branch: ${branchName}`);
 
             const { data: mainRef } = await github.rest.git.getRef({
               owner: context.repo.owner,
