@@ -12,18 +12,39 @@ jobs:
 
     permissions: write-all
     steps:
-      - name: Trigger production deployment workflow
+      - name: Trigger production deployment workflow and close linked issue
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
+            const branch = github.event.ref; // e.g. "refs/heads/hotfix/issue-123"
+            // Extract branch name only (remove "refs/heads/")
+            const branchName = branch.replace('refs/heads/', '');
 
+            // Trigger deploy-prod.yml workflow on main branch
             await github.rest.actions.createWorkflowDispatch({
               owner,
               repo,
               workflow_id: "deploy-prod.yml",
-              ref: "main" // production branch
+              ref: "main"
             });
 
             console.log("🚀 Triggered production deployment due to hotfix branch deletion.");
+
+            // Extract issue number from branch name (e.g. "hotfix/issue-123")
+            const issueMatch = branchName.match(/hotfix\/issue-(\d+)/);
+            if (issueMatch) {
+              const issueNumber = parseInt(issueMatch[1], 10);
+
+              console.log(`Closing issue #${issueNumber} linked to deleted branch '${branchName}'`);
+
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                state: "closed"
+              });
+            } else {
+              console.log(`No issue number found in branch name '${branchName}', skipping issue closure.`);
+            }
