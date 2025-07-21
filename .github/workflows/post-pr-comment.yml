@@ -15,22 +15,36 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const pr = context.payload.pull_request;
+            const sourceBranch = pr.head.ref;
+            const isHotfix = sourceBranch.startsWith("hotfix/");
+
+            const standardBody = `👋 To complete the CI/CD pipeline, please comment the following commands in sequence:
+            
+            * [ ] merge & build and deploy for development
+            * [ ] merge & build for staging
+            * [ ] deploy for staging
+            * [ ] deploy for production
+            
+            Each comment will trigger a corresponding GitHub Actions workflow.
+            
+            ✅ All steps must be completed **before merging** into main.
+            
+            Good luck!
+            `;
+            
+            const hotfixBody = `👋 This is a **hotfix** branch PR — fast-tracking to production!
+            
+            ✅ Closing this pull request after a successful merge will trigger the production deployment workflow.
+            
+            Thanks for patching things up!
+            `;
+            
+            const commentBody = isHotfix ? hotfixBody : standardBody;
+
             await github.rest.issues.createComment({
-              issue_number: context.payload.pull_request.number,
+              issue_number: pr.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `
-                👋 To complete the CI/CD pipeline, please comment the following commands in sequence:
-
-                1. merge & build and deploy for development
-                2. merge & build for staging
-                3. deploy for staging
-                4. deploy for production
-                
-                Each comment will trigger a corresponding GitHub Actions workflow. 
-          
-                ✅ All steps must be completed **before merging** into main.
-  
-                Good luck!   
-                `
+              body: commentBody.trim()
             });
